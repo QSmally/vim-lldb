@@ -1,15 +1,12 @@
 
 " Vim script glue code for LLDB integration
 
+if exists("s:lldb_disabled")
+  finish
+endif
+
 function! s:FindPythonScriptDir()
-  for dir in pathogen#split(&runtimepath)
-    let searchstr = "python-vim-lldb"
-    let candidates = pathogen#glob_directories(dir . "/" . searchstr)
-    if len(candidates) > 0
-      return candidates[0]
-    endif
-  endfor
-  return
+  return fnameescape(globpath(&runtimepath, 'python-vim-lldb'))
 endfunction()
 
 function! s:InitLldbPlugin()
@@ -26,14 +23,9 @@ function! s:InitLldbPlugin()
     execute 'python3 import sys; sys.path.append("' . vim_lldb_pydir . '")'
     execute 'py3file ' . vim_lldb_pydir . '/plugin.py'
   catch
-    echom 'Error loading lldb module; vim-lldb will be disabled. Check LLDB installation or set LLDB environment variable.'
+    echom 'Error loading lldb module; vim-lldb will be disabled.'
     return
   endtry
-
-  if exists("s:lldb_disabled")
-    echom 'Error loading lldb module; vim-lldb will be disabled. Check LLDB installation or set LLDB environment variable.'
-    return
-  endif
 
   " Key-Bindings
   " FIXME: choose sensible keybindings for:

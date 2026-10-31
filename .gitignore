@@ -1,0 +1,6 @@
+
+.DS_Store
+Session.vim
+*.swp
+.vimrc
+__pycache__
